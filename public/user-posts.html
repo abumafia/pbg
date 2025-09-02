@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Foydalanuvchi Postlari - MiniPost</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .fade-in {
+            animation: fadeIn 0.8s ease-in;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .like-animation {
+            animation: likeHeart 0.8s ease-out;
+        }
+        
+        @keyframes likeHeart {
+            0% { transform: scale(1); }
+            25% { transform: scale(1.3); }
+            50% { transform: scale(0.95); }
+            75% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+        
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255,255,255,.3);
+            border-radius: 50%;
+            border-top-color: #fff;
+            animation: spin 1s ease-in-out infinite;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body class="bg-gray-100">
+    <!-- Navigation -->
+    <nav class="bg-green-600 text-white p-4 sticky top-0 z-10 shadow-md">
+        <div class="container mx-auto flex justify-between items-center">
+            <a href="/" class="text-2xl font-bold">MiniPost</a>
+            <div class="flex space-x-4">
+                <a href="/" class="hover:text-green-200">Asosiy</a>
+                <a href="#create-post" class="hover:text-green-200">Post Yaratish</a>
+                <a href="#posts" class="hover:text-green-200">Postlar</a>
+                <a href="/admin" class="hover:text-green-200">Admin</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="bg-gradient-to-r from-green-500 to-teal-600 text-white py-16">
+        <div class="container mx-auto text-center">
+            <h1 class="text-4xl md:text-5xl font-bold mb-4">Foydalanuvchi Postlari</h1>
+            <p class="text-xl mb-8">O'z fikrlaringiz, tajribalaringiz va hikoyalaringizni ulashing</p>
+        </div>
+
+                    <!-- Create Post Button -->
+            <div class="text-center mb-8">
+                <button id="openModal" class="bg-green-700 hover:bg-green-800 text-white font-bold py-3 px-6 rounded-full shadow-lg transition duration-300 flex items-center justify-center mx-auto">
+                    <i class="fas fa-plus-circle mr-2"></i> Yangi Post Yaratish
+                </button>
+            </div>
+
+    </section>
+
+        <!-- Modal -->
+    <div id="postModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50 opacity-0 pointer-events-none modal">
+        <div class="bg-white rounded-xl shadow-2xl max-w-md w-full max-h-[90vh] overflow-y-auto">
+            <div class="p-6">
+                <div class="flex justify-between items-center mb-6">
+                    <h2 class="text-2xl font-bold text-gray-800">Yangi Post Yaratish</h2>
+                    <button id="closeModal" class="text-gray-500 hover:text-gray-700">
+                        <i class="fas fa-times text-xl"></i>
+                    </button>
+                </div>
+                
+                <form id="modalPostForm">
+                    <div class="mb-4">
+                        <label class="block text-gray-700 mb-2" for="modalAuthorName">Ismingiz</label>
+                        <input 
+                            type="text" 
+                            id="modalAuthorName" 
+                            name="authorName" 
+                            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                            placeholder="Ismingizni kiriting"
+                            required
+                        >
+                    </div>
+                    
+                    <div class="mb-4">
+                        <label class="block text-gray-700 mb-2" for="modalContent">Post Matni</label>
+                        <textarea 
+                            id="modalContent" 
+                            name="content" 
+                            rows="4" 
+                            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                            placeholder="Post matnini kiriting..."
+                            required
+                        ></textarea>
+                    </div>
+                    
+                    <div class="mb-6">
+                        <label class="block text-gray-700 mb-2">Rasm yoki Video (ixtiyoriy)</label>
+                        <div class="flex items-center justify-center w-full">
+                            <label for="modalMedia" class="flex flex-col items-center justify-center w-full h-32 border-2 border-dashed border-gray-300 rounded-lg cursor-pointer hover:border-green-500 transition">
+                                <div class="flex flex-col items-center justify-center pt-5 pb-6">
+                                    <i class="fas fa-cloud-upload-alt text-3xl text-gray-400 mb-2"></i>
+                                    <p class="mb-2 text-sm text-gray-500">Yuklash uchun bosing yoki bu yerga tortib keling</p>
+                                    <p class="text-xs text-gray-500">PNG, JPG, MP4 (Max: 10MB)</p>
+                                </div>
+                                <input id="modalMedia" name="media" type="file" class="hidden" accept="image/*,video/*">
+                            </label>
+                        </div>
+                        <div id="mediaPreview" class="mt-4 hidden">
+                            <img id="previewImage" src="" class="w-full h-48 object-cover rounded-lg hidden">
+                            <video id="previewVideo" controls class="w-full h-48 object-cover rounded-lg hidden"></video>
+                            <button type="button" id="removeMedia" class="mt-2 text-red-500 text-sm">
+                                <i class="fas fa-times mr-1"></i> Olib tashlash
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="flex justify-end space-x-3">
+                        <button type="button" id="cancelPost" class="px-4 py-2 text-gray-700 bg-gray-200 rounded-lg hover:bg-gray-300 transition">
+                            Bekor qilish
+                        </button>
+                        <button type="submit" class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition flex items-center">
+                            <i class="fas fa-paper-plane mr-2"></i> Post Joylash
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Success Toast -->
+    <div id="successToast" class="fixed top-4 right-4 bg-green-500 text-white px-6 py-3 rounded-lg shadow-lg transform translate-x-full transition-transform duration-300 z-50">
+        <div class="flex items-center">
+            <i class="fas fa-check-circle mr-2"></i>
+            <span>Post muvaffaqiyatli joylandi!</span>
+        </div>
+    </div>
+
+    <!-- Create Post Section -->
+    <section id="create-post" class="py-12">
+        <div class="container mx-auto px-4">
+            <h2 class="text-3xl font-bold text-center mb-8">Yangi Post Yaratish</h2>
+            <div class="max-w-2xl mx-auto bg-white rounded-lg shadow-md p-6">
+                <form id="create-user-post-form">
+                    <div class="mb-4">
+                        <label class="block text-gray-700 mb-2" for="authorName">Ismingiz</label>
+                        <input 
+                            type="text" 
+                            id="authorName" 
+                            name="authorName" 
+                            class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+                            required
+                        >
+                    </div>
+                    
+                    <div class="mb-4">
+                        <label class="block text-gray-700 mb-2" for="content">Post Matni</label>
+                        <textarea 
+                            id="content" 
+                            name="content" 
+                            rows="4" 
+                            class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+                            required
+                        ></textarea>
+                    </div>
+                    
+                    <div class="mb-4">
+                        <label class="block text-gray-700 mb-2" for="media">Rasm yoki Video (ixtiyoriy)</label>
+                        <input 
+                            type="file" 
+                            id="media" 
+                            name="media" 
+                            accept="image/*,video/*" 
+                            class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+                        >
+                    </div>
+                    
+                    <button 
+                        type="submit" 
+                        class="w-full bg-green-600 text-white py-2 px-4 rounded-md hover:bg-green-700 transition"
+                    >
+                        Post Joylash
+                    </button>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- Posts Section -->
+    <section id="posts" class="py-12 bg-gray-50">
+        <div class="container mx-auto px-4">
+            <h2 class="text-3xl font-bold text-center mb-8">Foydalanuvchi Postlari</h2>
+            <div id="posts-container" class="max-w-2xl mx-auto space-y-6"></div>
+            <div id="loading" class="text-center mt-8 hidden">
+                <div class="loading inline-block bg-green-600"></div>
+                <p class="mt-2 text-gray-600">Yana postlar yuklanmoqda...</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white py-8">
+        <div class="container mx-auto px-4 text-center">
+            <p>&copy; 2023 MiniPost. Barcha huquqlar himoyalangan.</p>
+            <div class="mt-4 flex justify-center space-x-4">
+                <a href="#" class="hover:text-green-300"><i class="fab fa-facebook"></i></a>
+                <a href="#" class="hover:text-green-300"><i class="fab fa-twitter"></i></a>
+                <a href="#" class="hover:text-green-300"><i class="fab fa-instagram"></i></a>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            let currentPage = 1;
+            let isLoading = false;
+            const postsContainer = document.getElementById('posts-container');
+            const loadingIndicator = document.getElementById('loading');
+            const createPostForm = document.getElementById('create-user-post-form');
+            const modal = document.getElementById('postModal');
+            const openModalBtn = document.getElementById('openModal');
+            const closeModalBtn = document.getElementById('closeModal');
+            const cancelPostBtn = document.getElementById('cancelPost');
+
+            // Load initial posts
+            loadPosts();
+            
+            // Infinite scroll
+            window.addEventListener('scroll', () => {
+                if (isLoading) return;
+                
+                const { scrollTop, scrollHeight, clientHeight } = document.documentElement;
+                
+                if (scrollTop + clientHeight >= scrollHeight - 100) {
+                    loadPosts();
+                }
+            });
+            
+            // Handle form submission
+            createPostForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                
+                const formData = new FormData(createPostForm);
+                
+                try {
+                    const response = await fetch('/api/user-posts', {
+                        method: 'POST',
+                        body: formData
+                    });
+                    
+                    if (response.ok) {
+                        alert('Post muvaffaqiyatli joylandi!');
+                        createPostForm.reset();
+                        
+                        // Reload posts to show the new one
+                        postsContainer.innerHTML = '';
+                        currentPage = 1;
+                        loadPosts();
+                    } else {
+                        alert('Post joylashda xatolik yuz berdi');
+                    }
+                } catch (error) {
+                    console.error('Error:', error);
+                    alert('Post joylashda xatolik yuz berdi');
+                }
+            });
+            
+            async function loadPosts() {
+                isLoading = true;
+                loadingIndicator.classList.remove('hidden');
+                
+                try {
+                    const response = await fetch(`/api/user-posts?page=${currentPage}`);
+                    const posts = await response.json();
+                    
+                    if (posts.length === 0) {
+                        // No more posts to load
+                        window.removeEventListener('scroll', scrollHandler);
+                        loadingIndicator.innerHTML = '<p class="text-gray-600">Yana postlar mavjud emas</p>';
+                        return;
+                    }
+                    
+                    // Render posts
+                    posts.forEach(post => {
+                        const postElement = createPostElement(post);
+                        postsContainer.appendChild(postElement);
+                    });
+                    
+                    currentPage++;
+                } catch (error) {
+                    console.error('Error loading posts:', error);
+                } finally {
+                    isLoading = false;
+                    loadingIndicator.classList.add('hidden');
+                }
+            }
+            
+            function createPostElement(post) {
+                const postDiv = document.createElement('div');
+                postDiv.className = 'bg-white rounded-lg shadow-md p-6 fade-in';
+                
+                let mediaHtml = '';
+                if (post.mediaType === 'image') {
+                    mediaHtml = `<img src="${post.mediaPath}" alt="Post image" class="w-full h-auto rounded-lg mb-4">`;
+                } else if (post.mediaType === 'video') {
+                    mediaHtml = `
+                        <video controls class="w-full h-auto rounded-lg mb-4">
+                            <source src="${post.mediaPath}" type="video/mp4">
+                            Sizning brauzeringiz video formatini qo'llab-quvvatlamaydi.
+                        </video>
+                    `;
+                }
+                
+                postDiv.innerHTML = `
+                    <div class="mb-4">
+                        ${mediaHtml}
+                    </div>
+                    <p class="text-gray-700 mb-4">${post.content}</p>
+                    <div class="flex justify-between items-center">
+                        <div class="text-gray-500 text-sm">
+                            <span class="font-semibold">${post.authorName}</span> • 
+                            <span>${new Date(post.createdAt).toLocaleDateString()}</span>
+                        </div>
+                        <button class="like-btn flex items-center space-x-1 text-gray-500 hover:text-red-500 transition" data-id="${post._id}">
+                            <i class="fa-regular fa-heart"></i>
+                            <span class="like-count">${post.likes}</span>
+                        </button>
+                    </div>
+                `;
+                
+                // Add like functionality
+                const likeBtn = postDiv.querySelector('.like-btn');
+                likeBtn.addEventListener('click', () => likePost(post._id, likeBtn));
+                
+                return postDiv;
+            }
+            
+            // Open modal
+            openModalBtn.addEventListener('click', function() {
+                modal.classList.add('active', 'opacity-100');
+                modal.classList.remove('opacity-0');
+                modal.style.pointerEvents = 'auto';
+            });
+            
+            // Close modal
+            function closeModal() {
+                modal.classList.remove('active', 'opacity-100');
+                modal.classList.add('opacity-0');
+                modal.style.pointerEvents = 'none';
+                modalPostForm.reset();
+                hideMediaPreview();
+            }
+            
+            closeModalBtn.addEventListener('click', closeModal);
+            cancelPostBtn.addEventListener('click', closeModal);
+            
+            // Close modal when clicking outside
+            modal.addEventListener('click', function(e) {
+                if (e.target === modal) {
+                    closeModal();
+                }
+            });
+
+            async function likePost(postId, button) {
+                try {
+                    const response = await fetch(`/api/user-posts/${postId}/like`, {
+                        method: 'POST'
+                    });
+                    
+                    const result = await response.json();
+                    
+                    // Update like count
+                    const likeCount = button.querySelector('.like-count');
+                    likeCount.textContent = result.likes;
+                    
+                    // Change icon to solid and add animation
+                    const icon = button.querySelector('i');
+                    icon.className = 'fa-solid fa-heart text-red-500';
+                    button.classList.add('like-animation');
+                    
+                    // Remove animation class after animation completes
+                    setTimeout(() => {
+                        button.classList.remove('like-animation');
+                    }, 800);
+                    
+                } catch (error) {
+                    console.error('Error liking post:', error);
+                }
+            }
+            
+            // Throttle scroll events for better performance
+            let scrollTimeout;
+            function scrollHandler() {
+                clearTimeout(scrollTimeout);
+                scrollTimeout = setTimeout(() => {
+                    const { scrollTop, scrollHeight, clientHeight } = document.documentElement;
+                    
+                    if (scrollTop + clientHeight >= scrollHeight - 100 && !isLoading) {
+                        loadPosts();
+                    }
+                }, 200);
+            }
+        });
+    </script>
+</body>
+</html>

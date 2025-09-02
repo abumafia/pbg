@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PUBG Accounts - Login/Register</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), 
+                        url('https://images.unsplash.com/photo-1542751371-adc38448a05e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1740&q=80') no-repeat center center fixed;
+            background-size: cover;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+    <div class="max-w-md w-full space-y-8 bg-gray-900 p-10 rounded-xl shadow-2xl">
+        <div>
+            <h2 class="mt-6 text-center text-3xl font-extrabold text-white">
+                PUBG Accounts Marketplace
+            </h2>
+            <p class="mt-2 text-center text-sm text-gray-400">
+                Sign in or create an account
+            </p>
+        </div>
+        <div class="mt-8 space-y-6">
+            <div id="login-form">
+                <div class="rounded-md shadow-sm -space-y-px">
+                    <div>
+                        <input id="login-username" name="username" type="text" required class="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-700 placeholder-gray-500 text-white bg-gray-800 rounded-t-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm" placeholder="Username">
+                    </div>
+                    <div>
+                        <input id="login-password" name="password" type="password" required class="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-700 placeholder-gray-500 text-white bg-gray-800 rounded-b-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm" placeholder="Password">
+                    </div>
+                </div>
+
+                <div class="mt-6">
+                    <button onclick="login()" class="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                        Sign in
+                    </button>
+                </div>
+                
+                <div class="mt-4 text-center">
+                    <p class="text-sm text-gray-400">
+                        Don't have an account? 
+                        <a href="#" onclick="toggleForms()" class="font-medium text-indigo-400 hover:text-indigo-300">
+                            Register now
+                        </a>
+                    </p>
+                </div>
+            </div>
+
+            <div id="register-form" class="hidden">
+                <div class="rounded-md shadow-sm -space-y-px">
+                    <div>
+                        <input id="reg-username" name="username" type="text" required class="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-700 placeholder-gray-500 text-white bg-gray-800 rounded-t-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm" placeholder="Username">
+                    </div>
+                    <div>
+                        <input id="reg-email" name="email" type="email" required class="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-700 placeholder-gray-500 text-white bg-gray-800 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm" placeholder="Email address">
+                    </div>
+                    <div>
+                        <input id="reg-password" name="password" type="password" required class="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-700 placeholder-gray-500 text-white bg-gray-800 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm" placeholder="Password">
+                    </div>
+                    <div>
+                        <input id="reg-fullname" name="fullname" type="text" class="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-700 placeholder-gray-500 text-white bg-gray-800 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm" placeholder="Full Name (optional)">
+                    </div>
+                    <div>
+                        <input id="reg-phone" name="phone" type="text" class="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-700 placeholder-gray-500 text-white bg-gray-800 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm" placeholder="Phone (optional)">
+                    </div>
+                    <div>
+                        <input id="reg-telegram" name="telegram" type="text" class="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-700 placeholder-gray-500 text-white bg-gray-800 rounded-b-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm" placeholder="Telegram (optional)">
+                    </div>
+                </div>
+
+                <div class="mt-6">
+                    <button onclick="register()" class="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                        Register
+                    </button>
+                </div>
+                
+                <div class="mt-4 text-center">
+                    <p class="text-sm text-gray-400">
+                        Already have an account? 
+                        <a href="#" onclick="toggleForms()" class="font-medium text-indigo-400 hover:text-indigo-300">
+                            Sign in
+                        </a>
+                    </p>
+                </div>
+            </div>
+        </div>
+        
+        <div id="message" class="hidden mt-4 p-3 rounded-md text-center"></div>
+    </div>
+
+    <script>
+        let sessionId = localStorage.getItem('sessionId');
+        let isAdmin = localStorage.getItem('isAdmin') === 'true';
+        
+        // Redirect if already logged in
+        if (sessionId) {
+            if (isAdmin) {
+                window.location.href = '/admin';
+            } else {
+                window.location.href = '/';
+            }
+        }
+        
+        function toggleForms() {
+            const loginForm = document.getElementById('login-form');
+            const registerForm = document.getElementById('register-form');
+            
+            if (loginForm.classList.contains('hidden')) {
+                loginForm.classList.remove('hidden');
+                registerForm.classList.add('hidden');
+            } else {
+                loginForm.classList.add('hidden');
+                registerForm.classList.remove('hidden');
+            }
+        }
+        
+        function showMessage(message, isError = false) {
+            const messageEl = document.getElementById('message');
+            messageEl.textContent = message;
+            messageEl.className = isError ? 
+                'mt-4 p-3 rounded-md text-center bg-red-900 text-red-200' : 
+                'mt-4 p-3 rounded-md text-center bg-green-900 text-green-200';
+            messageEl.classList.remove('hidden');
+            
+            setTimeout(() => {
+                messageEl.classList.add('hidden');
+            }, 5000);
+        }
+        
+        async function login() {
+            const username = document.getElementById('login-username').value;
+            const password = document.getElementById('login-password').value;
+            
+            if (!username || !password) {
+                showMessage('Please fill in all fields', true);
+                return;
+            }
+            
+            try {
+                const response = await fetch('/api/login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ username, password })
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok) {
+                    localStorage.setItem('sessionId', data.sessionId);
+                    localStorage.setItem('isAdmin', data.isAdmin);
+                    
+                    if (data.isAdmin) {
+                        window.location.href = '/admin';
+                    } else {
+                        window.location.href = '/';
+                    }
+                } else {
+                    showMessage(data.error, true);
+                }
+            } catch (error) {
+                showMessage('An error occurred. Please try again.', true);
+            }
+        }
+        
+        async function register() {
+            const username = document.getElementById('reg-username').value;
+            const email = document.getElementById('reg-email').value;
+            const password = document.getElementById('reg-password').value;
+            const fullName = document.getElementById('reg-fullname').value;
+            const phone = document.getElementById('reg-phone').value;
+            const telegram = document.getElementById('reg-telegram').value;
+            
+            if (!username || !email || !password) {
+                showMessage('Please fill in required fields', true);
+                return;
+            }
+            
+            try {
+                const response = await fetch('/api/register', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ username, email, password, fullName, phone, telegram })
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok) {
+                    localStorage.setItem('sessionId', data.sessionId);
+                    localStorage.setItem('isAdmin', data.isAdmin);
+                    window.location.href = '/';
+                } else {
+                    showMessage(data.error, true);
+                }
+            } catch (error) {
+                showMessage('An error occurred. Please try again.', true);
+            }
+        }
+    </script>
+</body>
+</html>

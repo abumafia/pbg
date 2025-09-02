@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MiniPost - Personal Blog</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Audiowide&family=Exo+2:wght@300;400;600&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
+    <style>
+        :root {
+            --neon-pink: #ff2d95;
+            --neon-blue: #00c2ff;
+            --neon-purple: #9d4edd;
+            --neon-green: #39ff14;
+        }
+        
+        body {
+            font-family: 'Exo 2', sans-serif;
+            background: linear-gradient(125deg, #000428, #004e92, #000428);
+            color: white;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+        
+        h1, h2, h3, h4, h5, h6, .futuristic {
+            font-family: 'Orbitron', sans-serif;
+            text-shadow: 0 0 10px rgba(0, 194, 255, 0.7);
+        }
+        
+        /* Glassmorphism effect */
+        .glass {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border-radius: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+        }
+        
+        /* Aurora gradient background */
+        .aurora-bg {
+            background: linear-gradient(45deg, 
+                rgba(0, 5, 20, 0.9) 0%, 
+                rgba(0, 40, 100, 0.7) 25%, 
+                rgba(100, 0, 120, 0.6) 50%, 
+                rgba(0, 100, 120, 0.7) 75%, 
+                rgba(0, 5, 20, 0.9) 100%);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .aurora-bg::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                radial-gradient(circle at 20% 30%, rgba(0, 194, 255, 0.4) 0%, transparent 40%),
+                radial-gradient(circle at 80% 20%, rgba(157, 78, 221, 0.4) 0%, transparent 40%),
+                radial-gradient(circle at 40% 70%, rgba(255, 45, 149, 0.4) 0%, transparent 40%);
+            z-index: -1;
+            animation: aurora 20s infinite linear;
+        }
+        
+        @keyframes aurora {
+            0% { background-position: 0% 0%, 0% 0%, 0% 0%; }
+            50% { background-position: 10% 10%, 5% 5%, 7% 7%; }
+            100% { background-position: 0% 0%, 0% 0%, 0% 0%; }
+        }
+        
+        /* Holographic panel for post cards */
+        .holographic {
+            background: rgba(10, 15, 35, 0.7);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-radius: 15px;
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            box-shadow: 
+                0 8px 32px 0 rgba(0, 0, 0, 0.36),
+                0 0 0 1px rgba(0, 194, 255, 0.3),
+                0 0 20px rgba(0, 194, 255, 0.5);
+            transition: all 0.3s ease;
+        }
+        
+        .holographic:hover {
+            transform: translateY(-5px);
+            box-shadow: 
+                0 12px 40px 0 rgba(0, 0, 0, 0.4),
+                0 0 0 1px rgba(0, 194, 255, 0.5),
+                0 0 30px rgba(0, 194, 255, 0.7);
+        }
+        
+        /* Neon text effect */
+        .neon-text {
+            text-shadow: 
+                0 0 5px currentColor,
+                0 0 10px currentColor,
+                0 0 20px currentColor;
+        }
+        
+        .neon-pink { color: var(--neon-pink); }
+        .neon-blue { color: var(--neon-blue); }
+        .neon-purple { color: var(--neon-purple); }
+        .neon-green { color: var(--neon-green); }
+        
+        /* Liquid like button animation */
+        .like-btn {
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+        
+        .like-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: all 0.5s ease;
+        }
+        
+        .like-btn:hover::before {
+            left: 100%;
+        }
+        
+        .like-animation {
+            animation: likeHeart 0.8s ease-out;
+        }
+        
+        @keyframes likeHeart {
+            0% { transform: scale(1); }
+            25% { transform: scale(1.3); }
+            50% { transform: scale(0.95); }
+            75% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+        
+        /* Fade in animation */
+        .fade-in {
+            animation: fadeIn 0.8s ease-in;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        /* Loading animation */
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255,255,255,.3);
+            border-radius: 50%;
+            border-top-color: #fff;
+            animation: spin 1s ease-in-out infinite;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        /* Particle container */
+        #particles-js {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            z-index: -2;
+        }
+        
+        /* Navigation styling */
+        nav {
+            background: rgba(0, 10, 30, 0.7);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(0, 194, 255, 0.3);
+            box-shadow: 0 0 15px rgba(0, 194, 255, 0.3);
+        }
+        
+        /* Gallery item styling */
+        .gallery-item {
+            transition: all 0.3s ease;
+            transform-style: preserve-3d;
+        }
+        
+        .gallery-item:hover {
+            transform: translateY(-10px) rotateX(5deg);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.4), 
+                        0 0 15px rgba(0, 194, 255, 0.5);
+        }
+        
+        /* Parallax scrolling effect */
+        .parallax-element {
+            transition: transform 0.1s ease-out;
+        }
+    </style>
+</head>
+<body>
+    <!-- Particles container -->
+    <div id="particles-js"></div>
+    
+    <!-- Navigation -->
+    <nav class="text-white p-4 sticky top-0 z-10">
+        <div class="container mx-auto flex justify-between items-center">
+            <a href="#" class="text-2xl font-bold futuristic neon-text neon-blue">MiniPost</a>
+            <div class="flex space-x-6">
+                <a href="#home" class="hover:neon-text hover:neon-pink transition-all">Home</a>
+                <a href="/user-posts" class="hover:neon-text hover:neon-pink transition-all">Foydalanuvchi Postlari</a>
+                <a href="#gallery" class="hover:neon-text hover:neon-pink transition-all">Gallery</a>
+                <a href="#about" class="hover:neon-text hover:neon-pink transition-all">About</a>
+                <a href="/admin" class="hover:neon-text hover:neon-pink transition-all">Admin</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="home" class="aurora-bg text-white py-24 relative">
+        <div class="container mx-auto text-center relative z-10">
+            <h1 class="text-5xl md:text-6xl font-bold mb-6 futuristic neon-text neon-blue">Welcome to MiniPost</h1>
+            <p class="text-xl mb-10 max-w-2xl mx-auto">Share your thoughts, ideas, and moments with the world</p>
+            <a href="#posts" class="glass px-8 py-4 rounded-full font-semibold text-lg inline-block hover:shadow-lg hover:shadow-cyan-500/30 transition-all duration-300">
+                Explore Posts
+            </a>
+        </div>
+    </section>
+
+    <!-- Posts Section -->
+    <section id="posts" class="py-16 relative">
+        <div class="container mx-auto px-4 relative z-10">
+            <h2 class="text-4xl font-bold text-center mb-12 futuristic neon-text neon-purple">Latest Posts</h2>
+            <div id="posts-container" class="max-w-2xl mx-auto space-y-8"></div>
+            <div id="loading" class="text-center mt-12 hidden">
+                <div class="loading inline-block"></div>
+                <p class="mt-4 text-gray-300">Loading more posts...</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Gallery Section -->
+    <section id="gallery" class="py-16 relative">
+        <div class="container mx-auto px-4 relative z-10">
+            <h2 class="text-4xl font-bold text-center mb-12 futuristic neon-text neon-green">Gallery</h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div class="holographic gallery-item p-0 overflow-hidden">
+                    <img src="https://picsum.photos/400/300?random=1" alt="Gallery image" class="w-full h-48 object-cover">
+                    <div class="p-4">
+                        <h3 class="font-semibold neon-text neon-blue">Nature Beauty</h3>
+                    </div>
+                </div>
+                <div class="holographic gallery-item p-0 overflow-hidden">
+                    <img src="https://picsum.photos/400/300?random=2" alt="Gallery image" class="w-full h-48 object-cover">
+                    <div class="p-4">
+                        <h3 class="font-semibold neon-text neon-blue">Urban Life</h3>
+                    </div>
+                </div>
+                <div class="holographic gallery-item p-0 overflow-hidden">
+                    <img src="https://picsum.photos/400/300?random=3" alt="Gallery image" class="w-full h-48 object-cover">
+                    <div class="p-4">
+                        <h3 class="font-semibold neon-text neon-blue">Tech World</h3>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="py-16 relative">
+        <div class="container mx-auto px-4 relative z-10">
+            <h2 class="text-4xl font-bold text-center mb-12 futuristic neon-text neon-pink">About MiniPost</h2>
+            <div class="max-w-3xl mx-auto text-center glass p-8 rounded-xl">
+                <p class="text-lg mb-6">
+                    MiniPost is a personal blogging platform where you can share your thoughts, ideas, and creative content with the world.
+                    Our mission is to provide a simple yet powerful platform for self-expression.
+                </p>
+                <p class="text-lg">
+                    Whether you're a writer, photographer, or just someone with something to say, MiniPost gives you the tools to share your voice.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="glass mt-16 py-10 border-t border-gray-700">
+        <div class="container mx-auto px-4 text-center">
+            <p class="mb-4">&copy; 2023 MiniPost. All rights reserved.</p>
+            <div class="flex justify-center space-x-6 text-xl">
+                <a href="#" class="neon-text neon-blue hover:neon-pink transition-colors"><i class="fab fa-facebook"></i></a>
+                <a href="#" class="neon-text neon-blue hover:neon-pink transition-colors"><i class="fab fa-twitter"></i></a>
+                <a href="#" class="neon-text neon-blue hover:neon-pink transition-colors"><i class="fab fa-instagram"></i></a>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Particles.js configuration
+        document.addEventListener('DOMContentLoaded', function() {
+            particlesJS('particles-js', {
+                particles: {
+                    number: { value: 80, density: { enable: true, value_area: 800 } },
+                    color: { value: "#00c2ff" },
+                    shape: { type: "circle" },
+                    opacity: { 
+                        value: 0.5, 
+                        random: true,
+                        anim: { enable: true, speed: 1, opacity_min: 0.1, sync: false }
+                    },
+                    size: { 
+                        value: 3, 
+                        random: true,
+                        anim: { enable: true, speed: 2, size_min: 0.1, sync: false }
+                    },
+                    line_linked: {
+                        enable: true,
+                        distance: 150,
+                        color: "#9d4edd",
+                        opacity: 0.4,
+                        width: 1
+                    },
+                    move: {
+                        enable: true,
+                        speed: 1,
+                        direction: "none",
+                        random: true,
+                        straight: false,
+                        out_mode: "out",
+                        bounce: false,
+                        attract: { enable: false, rotateX: 600, rotateY: 1200 }
+                    }
+                },
+                interactivity: {
+                    detect_on: "canvas",
+                    events: {
+                        onhover: { enable: true, mode: "grab" },
+                        onclick: { enable: true, mode: "push" },
+                        resize: true
+                    },
+                    modes: {
+                        grab: { distance: 140, line_linked: { opacity: 1 } },
+                        push: { particles_nb: 4 }
+                    }
+                },
+                retina_detect: true
+            });
+            
+            // Parallax effect implementation
+            document.addEventListener('scroll', function() {
+                const scrolled = window.pageYOffset;
+                const parallaxElements = document.querySelectorAll('.parallax-element');
+                
+                parallaxElements.forEach(function(element) {
+                    const speed = element.getAttribute('data-speed') || 0.5;
+                    element.style.transform = `translateY(${scrolled * speed}px)`;
+                });
+            });
+        });
+    </script>
+    <script src="/js/main.js"></script>
+</body>
+</html>
